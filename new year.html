@@ -1,0 +1,106 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Year Letter</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{margin:0;height:100vh;background:radial-gradient(circle at bottom,#0f172a,#020617);display:flex;justify-content:center;align-items:center;overflow:hidden;color:#f8fafc;font-family:'Playfair Display', serif;}
+#countdownOverlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:flex;justify-content:center;align-items:center;font-size:4em;z-index:9999;flex-direction:column;color:#facc15;}
+.envelope{width:280px;height:180px;background:#111827;position:relative;border-radius:8px;cursor:pointer;box-shadow:0 15px 40px rgba(0,0,0,.6);touch-action: manipulation;}
+.envelope::before{content:"";position:absolute;top:0;left:0;border-left:140px solid transparent;border-right:140px solid transparent;border-top:90px solid #1f2933;transform-origin:top;transition:transform 1.2s ease;}
+.envelope.open::before{transform:rotateX(180deg);}
+.paper{position:absolute;width:92vw;max-width:560px;max-height:80vh;background:rgba(255,255,255,.08);backdrop-filter:blur(12px);padding:30px;border-radius:18px;opacity:0;transform:translateY(40px);transition:all 1s ease;overflow:auto;scrollbar-width: thin;scrollbar-color: #facc15 transparent;}
+.paper.show{opacity:1;transform:translateY(0);}
+.paper::-webkit-scrollbar{width:6px;height:6px;}
+.paper::-webkit-scrollbar-thumb{background:#facc15;border-radius:3px;}
+.dear{font-family:'Great Vibes',cursive;font-size:2.5em;margin-bottom:20px;}
+.typing{font-family:'Playfair Display',serif;font-size:1em;line-height:1.8;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;border-right:2px solid rgba(255,255,255,.6);}
+.from{margin-top:35px;text-align:right;font-family:'Great Vibes',cursive;font-size:1.8em;opacity:0;}
+.firework{position:absolute;width:6px;height:6px;background:gold;border-radius:50%;animation:explode 1.5s ease-out infinite;}
+@keyframes explode{0%{transform:scale(0);opacity:1;}100%{transform:scale(18);opacity:0;}}
+</style>
+</head>
+<body>
+
+<div id="countdownOverlay">
+    <div>Get ready!</div>
+    <div id="countdown">5</div>
+</div>
+
+<div class="envelope" id="envelope"></div>
+
+<div class="paper" id="paper">
+    <div class="dear">Dear Her Name,</div>
+    <div class="typing" id="text">
+Happy New Year Loveyyyy. As this year starts, gusto ko lang sabihin na sobrang thankful ako na ikaw yung isa sa mga taong kasama ko sa journey na ’to. You bring a kind of happiness na tahimik pero sobrang totoo—yung tipong hindi kailangan ng maraming salita para maramdaman. The way you make me feel calm, excited, and genuinely happy is something I value more than I can explain.
+
+Looking forward ako sa mga susunod na moments natin—sa mga kwentuhan, tawa, late talks, at kahit sa mga simpleng oras lang na magkacall tayo. Hindi ko alam kung ano exactly ang tawag dito, pero alam ko na gusto kong alagaan kung anuman ’to. This year, I hope we grow closer, stronger, and more comfortable choosing each other, little by little. I’m grateful that you’re someone I want to keep in my life this year and beyond. ✨🎆😘😘🫶🫶
+    </div>
+    <div class="from" id="from">
+        From Chat ✨
+    </div>
+</div>
+
+<audio id="sound" src="assets/audio.mp3"></audio>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const countdownOverlay = document.getElementById("countdownOverlay");
+    const countdownEl = document.getElementById("countdown");
+    const envelope = document.getElementById("envelope");
+    const paper = document.getElementById("paper");
+    const textEl = document.getElementById("text");
+    const fromEl = document.getElementById("from");
+    const sound = document.getElementById("sound");
+
+    const fullText = textEl.innerText;
+    textEl.innerText = "";
+    let i = 0;
+
+    // Countdown
+    let count = 5;
+    const countdownInterval = setInterval(()=>{
+        count--;
+        countdownEl.innerText = count;
+        if(count <=0){
+            clearInterval(countdownInterval);
+            countdownOverlay.style.display="none";
+            openLetter();
+        }
+    },1000);
+
+    function openLetter(){
+        envelope.classList.add("open");
+        paper.classList.add("show");
+        sound.play().catch(()=>{}); // optional audio
+
+        const typing = setInterval(()=>{
+            textEl.innerText += fullText[i];
+            i++;
+            textEl.scrollTop = textEl.scrollHeight;
+            if(i>=fullText.length){
+                clearInterval(typing);
+                fromEl.style.opacity=1;
+                launchFireworks();
+            }
+        },25);
+    }
+
+    function launchFireworks(){
+        setInterval(()=>{
+            const fw=document.createElement("div");
+            fw.className="firework";
+            fw.style.left=Math.random()*100+"vw";
+            fw.style.top=Math.random()*100+"vh";
+            document.body.appendChild(fw);
+            setTimeout(()=>fw.remove(),1500);
+        },500);
+    }
+});
+</script>
+
+</body>
+</html>
